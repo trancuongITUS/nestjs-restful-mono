@@ -5,4 +5,9 @@ export const validationSchema = Joi.object({
         .valid('development', 'production', 'test')
         .default('development'),
     PORT: Joi.number().default(3000),
+    DATABASE_HOST: Joi.string().default('localhost'),
+    DATABASE_PORT: Joi.number().default(5432),
+    DATABASE_USER: Joi.string().default('postgres'),
+    DATABASE_PASSWORD: Joi.string().default('postgres'),
+    DATABASE_NAME: Joi.string().default('development'),
 });
