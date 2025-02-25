@@ -1,2 +1,7 @@
 node_modules
 dist
+.env
+.env.*
+!src/config/envs/.env.development
+!src/config/envs/.env.test
+!src/config/envs/.env.production
