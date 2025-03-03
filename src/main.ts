@@ -18,6 +18,23 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const httpAdapter = app.get(HttpAdapterHost);
 
+    // CORS Configuration
+    app.enableCors({
+        origin: configService.get('CORS_ORIGINS', '*'),
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        credentials: true,
+        allowedHeaders: [
+            'Origin',
+            'X-Requested-With',
+            'Content-Type',
+            'Accept',
+            'Authorization',
+            'X-CSRF-Token',
+        ],
+        exposedHeaders: ['X-Response-Time'],
+        maxAge: 3600,
+    });
+
     // Global Filters
     app.useGlobalFilters(
         new AllExceptionsFilter(httpAdapter),
@@ -40,8 +57,7 @@ async function bootstrap() {
         }),
     );
 
-    const port = configService.get<number>('port', 3000);
-    await app.listen(port);
+    await app.listen(configService.get('port', 3000));
     console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

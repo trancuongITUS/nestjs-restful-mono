@@ -10,4 +10,11 @@ export const validationSchema = Joi.object({
     DATABASE_USER: Joi.string().default('postgres'),
     DATABASE_PASSWORD: Joi.string().default('postgres'),
     DATABASE_NAME: Joi.string().default('development'),
+    CORS_ORIGINS: Joi.alternatives()
+        .try(
+            Joi.string().valid('*'),
+            Joi.array().items(Joi.string().uri()),
+            Joi.string().uri(),
+        )
+        .default('*'),
 });
