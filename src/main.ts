@@ -2,10 +2,34 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+import {
+    TransformInterceptor,
+    LoggingInterceptor,
+    TimeoutInterceptor,
+} from './common/interceptors/global';
+import {
+    AllExceptionsFilter,
+    HttpExceptionFilter,
+} from './common/filters/global';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const configService = app.get(ConfigService);
+    const httpAdapter = app.get(HttpAdapterHost);
+
+    // Global Filters
+    app.useGlobalFilters(
+        new AllExceptionsFilter(httpAdapter),
+        new HttpExceptionFilter(),
+    );
+
+    // Global Interceptors
+    app.useGlobalInterceptors(
+        new TransformInterceptor(),
+        new LoggingInterceptor(),
+        new TimeoutInterceptor(),
+    );
 
     // Global Validation Pipe
     app.useGlobalPipes(
